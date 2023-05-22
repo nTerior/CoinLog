@@ -32,6 +32,7 @@ class HomePage extends StatelessWidget {
                     BalanceInfo(),
                     SizedBox(height: Layout.padding),
                     GridButtons(),
+                    SizedBox(height: Layout.padding * 2),
                     TransactionHistory(),
                     SizedBox(height: Layout.padding),
                   ],

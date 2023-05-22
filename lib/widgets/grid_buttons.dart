@@ -1,15 +1,17 @@
-import 'dart:ui';
 import 'package:coin_log/layout.dart';
 import 'package:coin_log/morphism/glass_morphism.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class GridButton extends StatelessWidget {
+  final String text;
   final IconData icon;
   final void Function()? onTap;
 
   const GridButton({
     Key? key,
+    required this.text,
     required this.icon,
     this.onTap,
   }) : super(key: key);
@@ -18,11 +20,20 @@ class GridButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: GlassMorphism(
-          child: Icon(icon, weight: 200, size: 50, color: Colors.white),
-        ),
+      child: Column(
+        children: [
+          AspectRatio(
+            aspectRatio: 1,
+            child: GlassMorphism(
+              child: Icon(icon, weight: 200, size: 50, color: Colors.white),
+            ),
+          ),
+          const SizedBox(height: Layout.padding / 2),
+          Text(
+            text,
+            style: const TextStyle(color: Colors.white),
+          ),
+        ],
       ),
     );
   }
@@ -33,36 +44,19 @@ class GridButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 4,
+    const children = [
+      GridButton(text: "Add", icon: Symbols.add_rounded),
+      GridButton(text: "Stats", icon: Symbols.donut_large_rounded),
+      GridButton(text: "Limits", icon: Symbols.filter_none_rounded),
+      GridButton(text: "Settings", icon: Symbols.settings),
+    ];
+
+    return MasonryGridView.count(
       shrinkWrap: true,
+      crossAxisCount: 4,
       crossAxisSpacing: Layout.padding,
-      children: const [
-        GridButton(icon: Symbols.add_rounded),
-        GridButton(icon: Symbols.donut_large_rounded),
-        GridButton(icon: Symbols.filter_none_rounded),
-        GridButton(icon: Symbols.settings),
-        Text(
-          "Add",
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white),
-        ),
-        Text(
-          "Statistics",
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white),
-        ),
-        Text(
-          "Limits",
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white),
-        ),
-        Text(
-          "Settings",
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white),
-        ),
-      ],
+      itemCount: 4,
+      itemBuilder: (context, index) => children[index],
     );
   }
 }
