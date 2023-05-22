@@ -1,5 +1,5 @@
 import 'package:coin_log/layout.dart';
-import 'package:coin_log/modals/add_transaction.dart';
+import 'package:coin_log/modals/transaction_editor.dart';
 import 'package:coin_log/morphism/glass_morphism.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -51,23 +51,7 @@ class GridButtons extends StatelessWidget {
       GridButton(
         text: "Add",
         icon: Symbols.add_rounded,
-        onTap: () => showModalBottomSheet(
-          context: context,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(Layout.borderRadius),
-              bottom: Radius.zero,
-            ),
-          ),
-          builder: (context) => Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: const AddTransactionSheet(),
-          ),
-        ),
+        onTap: () => TransactionEditorSheet.open(context),
       ),
     ];
 

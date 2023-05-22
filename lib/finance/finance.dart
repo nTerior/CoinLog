@@ -46,4 +46,11 @@ class Finance extends ChangeNotifier {
     _balance -= transaction.amount;
     notifyListeners();
   }
+
+  void editTransaction(Transaction old, Transaction values) {
+    final index = _transactions.indexOf(old);
+    _transactions.remove(old);
+    _transactions.insert(index, values);
+    notifyListeners();
+  }
 }

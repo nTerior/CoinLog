@@ -1,7 +1,11 @@
 import 'package:coin_log/finance/finance.dart';
 import 'package:coin_log/layout.dart';
+import 'package:coin_log/modals/transaction_editor.dart';
+import 'package:coin_log/widgets/custom_slidable_action.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 extension DateUtils on DateTime {
   String get formatDate => DateFormat.yMMMd(Intl.systemLocale).format(this);
@@ -23,58 +27,82 @@ class Transaction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: Layout.padding.pad,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Slidable(
+      endActionPane: ActionPane(
+        motion: const BehindMotion(),
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(color: Colors.white),
-              ),
-              Row(
-                children: [
-                  Text(
-                    dateTime.formatDate,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w100,
-                    ),
-                  ),
-                  Padding(
-                    padding: (Layout.padding / 4).hPad,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(0.7),
-                      ),
-                      width: 4,
-                      height: 4,
-                    ),
-                  ),
-                  Text(
-                    dateTime.formatTime,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w100,
-                    ),
-                  ),
-                ],
-              )
-            ],
+          VerticalDivider(
+            color: Colors.white.withOpacity(0.1),
           ),
-          Text(
-            "${amount >= 0 ? "+" : ""}${amount.asCurrency("€")}",
-            style: TextStyle(
-              color: amount < 0
-                  ? Theme.of(context).colorScheme.error
-                  : Colors.green,
-              fontWeight: FontWeight.bold,
+          MySlidableAction(
+            backgroundColor: Colors.transparent,
+            onPressed: (context) => TransactionEditorSheet.open(context, this),
+            icon: const Icon(Symbols.edit, fill: 1),
+          ),
+          MySlidableAction(
+            backgroundColor: Colors.transparent,
+            onPressed: (context) {},
+            icon: Icon(
+              Symbols.delete,
+              fill: 1,
+              color: Theme.of(context).colorScheme.error,
             ),
           ),
         ],
+      ),
+      child: Padding(
+        padding: Layout.padding.pad,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(color: Colors.white),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      dateTime.formatDate,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w100,
+                      ),
+                    ),
+                    Padding(
+                      padding: (Layout.padding / 4).hPad,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.7),
+                        ),
+                        width: 4,
+                        height: 4,
+                      ),
+                    ),
+                    Text(
+                      dateTime.formatTime,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w100,
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+            Text(
+              "${amount >= 0 ? "+" : ""}${amount.asCurrency("€")}",
+              style: TextStyle(
+                color: amount < 0
+                    ? Theme.of(context).colorScheme.error
+                    : Colors.green,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

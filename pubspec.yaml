@@ -44,6 +44,7 @@ dependencies:
   non_uniform_border: ^1.0.0
   flutter_form_builder: ^9.0.0
   form_builder_validators: ^9.0.0
+  flutter_slidable: ^3.0.0
 
 dev_dependencies:
   flutter_test:

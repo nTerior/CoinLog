@@ -8,26 +8,59 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
-class AddTransactionSheet extends StatefulWidget {
-  const AddTransactionSheet({Key? key}) : super(key: key);
+class TransactionEditorSheet extends StatefulWidget {
+  static void open(BuildContext ctx, [Transaction? transaction]) {
+    showModalBottomSheet(
+      context: ctx,
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(Layout.borderRadius),
+          bottom: Radius.zero,
+        ),
+      ),
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: TransactionEditorSheet(transaction: transaction),
+      ),
+    );
+  }
+
+  final Transaction? transaction;
+
+  const TransactionEditorSheet({Key? key, this.transaction}) : super(key: key);
 
   @override
-  State<AddTransactionSheet> createState() => _AddTransactionSheetState();
+  State<TransactionEditorSheet> createState() => _TransactionEditorSheetState();
 }
 
-class _AddTransactionSheetState extends State<AddTransactionSheet> {
+class _TransactionEditorSheetState extends State<TransactionEditorSheet> {
   final _formKey = GlobalKey<FormBuilderState>();
   final _amountFocusNode = FocusNode();
 
-  bool _isExpense = true;
+  late final Transaction? _initialTransaction;
 
+  bool _isExpense = true;
   DateTime _selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    _initialTransaction = widget.transaction;
+    if (_initialTransaction != null) {
+      _isExpense = _initialTransaction!.amount < 0;
+      _selectedDate = _initialTransaction!.dateTime;
+    }
+    super.initState();
+  }
 
   void showDateTimePicker() async {
     final now = DateTime.now();
     final date = await showDatePicker(
       context: context,
-      initialDate: now,
+      initialDate: _selectedDate,
       firstDate: DateTime(now.year - 100),
       lastDate: DateTime(now.year + 100),
     );
@@ -36,7 +69,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
 
     final time = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.fromDateTime(now),
+      initialTime: TimeOfDay.fromDateTime(_selectedDate),
     );
 
     _selectedDate = DateTime(
@@ -71,7 +104,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                     textBaseline: TextBaseline.alphabetic,
                     children: [
                       Text(
-                        "Add ",
+                        _initialTransaction == null ? "Add " : "Edit ",
                         style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -100,6 +133,7 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                             _amountFocusNode,
                           ),
                           validator: FormBuilderValidators.required(),
+                          initialValue: _initialTransaction?.title ?? "",
                         ),
                       ),
                     ],
@@ -140,9 +174,9 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                     ),
                   ],
                   showSelectedIcon: false,
-                  selected: {_isExpense},
                   emptySelectionAllowed: false,
                   multiSelectionEnabled: false,
+                  selected: {_isExpense},
                   onSelectionChanged: (p0) =>
                       setState(() => _isExpense = p0.first),
                 ),
@@ -165,6 +199,8 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                         ),
                     keyboardType: TextInputType.number,
                     validator: FormBuilderValidators.required(),
+                    initialValue:
+                        _initialTransaction?.amount.abs().toStringAsFixed(2) ?? "",
                   ),
                 ),
               ],
@@ -173,6 +209,22 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
             InkWell(
               onTap: () {
                 if (!_formKey.currentState!.validate()) return;
+
+                if (_initialTransaction != null) {
+                  Provider.of<Finance>(context, listen: false).editTransaction(
+                    _initialTransaction!,
+                    Transaction(
+                      title: _formKey.currentState!.fields["title"]!.value,
+                      amount: double.parse(
+                              _formKey.currentState!.fields["amount"]!.value) *
+                          (_isExpense ? -1 : 1),
+                      dateTime: _selectedDate,
+                    ),
+                  );
+                  Navigator.pop(context);
+                  return;
+                }
+
                 Provider.of<Finance>(context, listen: false).add(
                   Transaction(
                     title: _formKey.currentState!.fields["title"]!.value,
@@ -184,19 +236,21 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
                 );
                 Navigator.pop(context);
               },
-              child: const GlassMorphism(
+              child: GlassMorphism(
                 height: 50,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     Icon(
-                      Symbols.add_rounded,
+                      _initialTransaction != null
+                          ? Symbols.save
+                          : Symbols.add_rounded,
                       weight: 100,
                       size: 40,
                     ),
-                    Text(" Add"),
-                    Spacer(),
+                    Text(_initialTransaction != null ? " Save" : " Add"),
+                    const Spacer(),
                   ],
                 ),
               ),
