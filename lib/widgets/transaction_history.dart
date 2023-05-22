@@ -26,7 +26,7 @@ class TransactionHistory extends StatelessWidget {
         ),
         GlassMorphism(
           child: Column(
-            children: finance.transactions,
+            children: finance.transactions.reversed.toList(),
           ),
         ),
       ],

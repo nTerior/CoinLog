@@ -42,7 +42,7 @@ class Transaction extends StatelessWidget {
               ),
               Text(
                 dateTime.formatted,
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.grey[500]),
               )
             ],
           ),
