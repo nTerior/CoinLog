@@ -11,13 +11,13 @@ extension LayoutUtils on double {
   get lPad => EdgeInsets.only(left: this);
   get rPad => EdgeInsets.only(right: this);
 
-  get tlrPad => EdgeInsets.only(top: this, left: this, bottom: this);
-  get blrPad => EdgeInsets.only(top: this, left: this, bottom: this);
+  get tlrPad => EdgeInsets.only(top: this, left: this, right: this);
+  get blrPad => EdgeInsets.only(bottom: this, left: this, right: this);
 }
 
 class Layout {
   Layout._();
 
-  static double padding = 16;
-  static double borderRadius = 16;
+  static const double padding = 16;
+  static const double borderRadius = 16;
 }

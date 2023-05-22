@@ -5,13 +5,11 @@ import 'package:flutter/material.dart';
 class BackgroundImage extends StatelessWidget {
   final ImageProvider image;
   final double opacity;
-  final double blur;
 
   const BackgroundImage({
     Key? key,
     required this.image,
-    this.opacity = 0.7,
-    this.blur = 5,
+    this.opacity = 0.4,
   }) : super(key: key);
 
   @override
@@ -23,10 +21,7 @@ class BackgroundImage extends StatelessWidget {
           fit: BoxFit.cover,
         ),
       ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-        child: Container(color: Colors.black.withOpacity(opacity)),
-      ),
+      child: Container(color: Colors.black.withOpacity(opacity)),
     );
   }
 }

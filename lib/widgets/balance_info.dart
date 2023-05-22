@@ -8,7 +8,7 @@ class BalanceInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: Layout.padding.tlrPad,
+      padding: Layout.padding.tPad,
       child: RichText(
         text: TextSpan(
           text: "Balance\n",
