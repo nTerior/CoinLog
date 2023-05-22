@@ -32,7 +32,9 @@ class GridButton extends StatelessWidget {
           const SizedBox(height: Layout.padding / 2),
           Text(
             text,
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(
+              color: Colors.white,
+            ),
           ),
         ],
       ),

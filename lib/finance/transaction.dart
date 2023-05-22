@@ -1,16 +1,12 @@
-import 'dart:ui';
-
 import 'package:coin_log/finance/finance.dart';
 import 'package:coin_log/layout.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 extension DateUtils on DateTime {
-  String get formatted {
-    return DateFormat.yMMMd(Intl.systemLocale)
-        .addPattern(DateFormat.HOUR24_MINUTE, " • ")
-        .format(this);
-  }
+  String get formatDate => DateFormat.yMMMd(Intl.systemLocale).format(this);
+
+  String get formatTime => DateFormat.Hm(Intl.systemLocale).format(this);
 }
 
 class Transaction extends StatelessWidget {
@@ -40,16 +36,41 @@ class Transaction extends StatelessWidget {
                 title,
                 style: const TextStyle(color: Colors.white),
               ),
-              Text(
-                dateTime.formatted,
-                style: TextStyle(color: Colors.grey[500]),
+              Row(
+                children: [
+                  Text(
+                    dateTime.formatDate,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w100,
+                    ),
+                  ),
+                  Padding(
+                    padding: (Layout.padding / 4).hPad,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withOpacity(0.7),
+                      ),
+                      width: 4,
+                      height: 4,
+                    ),
+                  ),
+                  Text(
+                    dateTime.formatTime,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w100,
+                    ),
+                  ),
+                ],
               )
             ],
           ),
           Text(
             "${amount >= 0 ? "+" : ""}${amount.asCurrency("€")}",
             style: TextStyle(
-              color: amount < 0 ? Colors.red : Colors.green,
+              color: amount < 0
+                  ? Theme.of(context).colorScheme.error
+                  : Colors.green,
               fontWeight: FontWeight.bold,
             ),
           ),

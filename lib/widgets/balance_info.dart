@@ -12,11 +12,16 @@ class BalanceInfo extends StatelessWidget {
     return RichText(
       text: TextSpan(
         text: "Balance\n",
+        style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+              fontWeight: FontWeight.w100,
+            ),
         children: [
           TextSpan(
             text: finance.balance.asCurrency("€"),
             style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  color: Colors.white,
+                  color: finance.balance >= 0
+                      ? Colors.white
+                      : Theme.of(context).colorScheme.error,
                   fontWeight: FontWeight.w100,
                 ),
           ),
