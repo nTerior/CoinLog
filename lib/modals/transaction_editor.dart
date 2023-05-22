@@ -9,26 +9,6 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 
 class TransactionEditorSheet extends StatefulWidget {
-  static void open(BuildContext ctx, [Transaction? transaction]) {
-    showModalBottomSheet(
-      context: ctx,
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(Layout.borderRadius),
-          bottom: Radius.zero,
-        ),
-      ),
-      builder: (context) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: TransactionEditorSheet(transaction: transaction),
-      ),
-    );
-  }
-
   final Transaction? transaction;
 
   const TransactionEditorSheet({Key? key, this.transaction}) : super(key: key);
@@ -83,149 +63,129 @@ class _TransactionEditorSheetState extends State<TransactionEditorSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return GlassMorphism(
-      bottomBorderWidth: 0,
-      borderRadius: const BorderRadius.vertical(
-        top: Radius.circular(Layout.borderRadius),
-        bottom: Radius.zero,
-      ),
-      padding: Layout.padding.tlrPad,
-      child: FormBuilder(
-        key: _formKey,
-        child: ListView(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Text(
-                        _initialTransaction == null ? "Add " : "Edit ",
+    return FormBuilder(
+      key: _formKey,
+      child: ListView(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text(
+                      _initialTransaction == null ? "Add " : "Edit ",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .copyWith(
+                            fontWeight: FontWeight.w100,
+                            color: Colors.white.withOpacity(0.5),
+                          ),
+                    ),
+                    Expanded(
+                      child: FormBuilderTextField(
+                        name: "title",
+                        autofocus: true,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                        ),
                         style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
                             .copyWith(
+                              height: 1.5,
                               fontWeight: FontWeight.w100,
-                              color: Colors.white.withOpacity(0.5),
                             ),
-                      ),
-                      Expanded(
-                        child: FormBuilderTextField(
-                          name: "title",
-                          autofocus: true,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                          ),
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium!
-                              .copyWith(
-                                height: 1.5,
-                                fontWeight: FontWeight.w100,
-                              ),
-                          textInputAction: TextInputAction.next,
-                          onEditingComplete: () =>
-                              FocusScope.of(context).requestFocus(
-                            _amountFocusNode,
-                          ),
-                          validator: FormBuilderValidators.required(),
-                          initialValue: _initialTransaction?.title ?? "",
+                        textInputAction: TextInputAction.next,
+                        onEditingComplete: () =>
+                            FocusScope.of(context).requestFocus(
+                          _amountFocusNode,
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                IconButton(
-                  onPressed: showDateTimePicker,
-                  icon: Icon(
-                    Symbols.calendar_month_rounded,
-                    size: 35,
-                    weight: 100,
-                    color: Colors.white.withOpacity(0.5),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                SegmentedButton(
-                  segments: const [
-                    ButtonSegment(
-                      value: false,
-                      enabled: true,
-                      icon: Icon(
-                        Symbols.add,
-                        size: 40,
-                        weight: 100,
-                      ),
-                    ),
-                    ButtonSegment(
-                      value: true,
-                      enabled: true,
-                      icon: Icon(
-                        Symbols.remove,
-                        size: 40,
-                        weight: 100,
+                        validator: FormBuilderValidators.required(),
+                        initialValue: _initialTransaction?.title ?? "",
                       ),
                     ),
                   ],
-                  showSelectedIcon: false,
-                  emptySelectionAllowed: false,
-                  multiSelectionEnabled: false,
-                  selected: {_isExpense},
-                  onSelectionChanged: (p0) =>
-                      setState(() => _isExpense = p0.first),
                 ),
-                const SizedBox(width: Layout.padding),
-                Expanded(
-                  child: FormBuilderTextField(
-                    name: "amount",
-                    focusNode: _amountFocusNode,
-                    textAlign: TextAlign.right,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Amount",
-                      hintStyle: TextStyle(
-                        color: Colors.white.withOpacity(0.3),
-                      ),
-                      suffixText: " €",
+              ),
+              IconButton(
+                onPressed: showDateTimePicker,
+                icon: Icon(
+                  Symbols.calendar_month_rounded,
+                  size: 35,
+                  weight: 100,
+                  color: Colors.white.withOpacity(0.5),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              SegmentedButton(
+                segments: const [
+                  ButtonSegment(
+                    value: false,
+                    enabled: true,
+                    icon: Icon(
+                      Symbols.add,
+                      size: 40,
+                      weight: 100,
                     ),
-                    style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                          fontWeight: FontWeight.w100,
-                        ),
-                    keyboardType: TextInputType.number,
-                    validator: FormBuilderValidators.required(),
-                    initialValue:
-                        _initialTransaction?.amount.abs().toStringAsFixed(2) ?? "",
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: Layout.padding),
-            InkWell(
-              onTap: () {
-                if (!_formKey.currentState!.validate()) return;
-
-                if (_initialTransaction != null) {
-                  Provider.of<Finance>(context, listen: false).editTransaction(
-                    _initialTransaction!,
-                    Transaction(
-                      title: _formKey.currentState!.fields["title"]!.value,
-                      amount: double.parse(
-                              _formKey.currentState!.fields["amount"]!.value) *
-                          (_isExpense ? -1 : 1),
-                      dateTime: _selectedDate,
+                  ButtonSegment(
+                    value: true,
+                    enabled: true,
+                    icon: Icon(
+                      Symbols.remove,
+                      size: 40,
+                      weight: 100,
                     ),
-                  );
-                  Navigator.pop(context);
-                  return;
-                }
+                  ),
+                ],
+                showSelectedIcon: false,
+                emptySelectionAllowed: false,
+                multiSelectionEnabled: false,
+                selected: {_isExpense},
+                onSelectionChanged: (p0) =>
+                    setState(() => _isExpense = p0.first),
+              ),
+              const SizedBox(width: Layout.padding),
+              Expanded(
+                child: FormBuilderTextField(
+                  name: "amount",
+                  focusNode: _amountFocusNode,
+                  textAlign: TextAlign.right,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Amount",
+                    hintStyle: TextStyle(
+                      color: Colors.white.withOpacity(0.3),
+                    ),
+                    suffixText: " €",
+                  ),
+                  style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                        fontWeight: FontWeight.w100,
+                      ),
+                  keyboardType: TextInputType.number,
+                  validator: FormBuilderValidators.required(),
+                  initialValue:
+                      _initialTransaction?.amount.abs().toStringAsFixed(2) ?? "",
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: Layout.padding),
+          InkWell(
+            onTap: () {
+              if (!_formKey.currentState!.validate()) return;
 
-                Provider.of<Finance>(context, listen: false).add(
+              if (_initialTransaction != null) {
+                Provider.of<Finance>(context, listen: false).editTransaction(
+                  _initialTransaction!,
                   Transaction(
                     title: _formKey.currentState!.fields["title"]!.value,
                     amount: double.parse(
@@ -235,29 +195,41 @@ class _TransactionEditorSheetState extends State<TransactionEditorSheet> {
                   ),
                 );
                 Navigator.pop(context);
-              },
-              child: GlassMorphism(
-                height: 50,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const Spacer(),
-                    Icon(
-                      _initialTransaction != null
-                          ? Symbols.save
-                          : Symbols.add_rounded,
-                      weight: 100,
-                      size: 40,
-                    ),
-                    Text(_initialTransaction != null ? " Save" : " Add"),
-                    const Spacer(),
-                  ],
+                return;
+              }
+
+              Provider.of<Finance>(context, listen: false).add(
+                Transaction(
+                  title: _formKey.currentState!.fields["title"]!.value,
+                  amount: double.parse(
+                          _formKey.currentState!.fields["amount"]!.value) *
+                      (_isExpense ? -1 : 1),
+                  dateTime: _selectedDate,
                 ),
+              );
+              Navigator.pop(context);
+            },
+            child: GlassMorphism(
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Spacer(),
+                  Icon(
+                    _initialTransaction != null
+                        ? Symbols.save
+                        : Symbols.add_rounded,
+                    weight: 100,
+                    size: 40,
+                  ),
+                  Text(_initialTransaction != null ? " Save" : " Add"),
+                  const Spacer(),
+                ],
               ),
             ),
-            const SizedBox(height: Layout.padding),
-          ],
-        ),
+          ),
+          const SizedBox(height: Layout.padding),
+        ],
       ),
     );
   }

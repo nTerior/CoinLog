@@ -1,6 +1,8 @@
 import 'package:coin_log/finance/finance.dart';
 import 'package:coin_log/layout.dart';
+import 'package:coin_log/modals/transaction_deletor.dart';
 import 'package:coin_log/modals/transaction_editor.dart';
+import 'package:coin_log/utils.dart';
 import 'package:coin_log/widgets/custom_slidable_action.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -36,12 +38,22 @@ class Transaction extends StatelessWidget {
           ),
           MySlidableAction(
             backgroundColor: Colors.transparent,
-            onPressed: (context) => TransactionEditorSheet.open(context, this),
+            onPressed: (context) => openModal(
+              context,
+              TransactionEditorSheet(
+                transaction: this,
+              ),
+            ),
             icon: const Icon(Symbols.edit, fill: 1),
           ),
           MySlidableAction(
             backgroundColor: Colors.transparent,
-            onPressed: (context) {},
+            onPressed: (context) => openModal(
+              context,
+              TransactionDeletorModal(
+                transaction: this,
+              ),
+            ),
             icon: Icon(
               Symbols.delete,
               fill: 1,

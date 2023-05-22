@@ -1,6 +1,7 @@
 import 'package:coin_log/layout.dart';
 import 'package:coin_log/modals/transaction_editor.dart';
 import 'package:coin_log/morphism/glass_morphism.dart';
+import 'package:coin_log/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -10,11 +11,16 @@ class GridButton extends StatelessWidget {
   final IconData icon;
   final void Function()? onTap;
 
+  final Color? textColor;
+  final Color? iconColor;
+
   const GridButton({
     Key? key,
     required this.text,
     required this.icon,
     this.onTap,
+    this.textColor,
+    this.iconColor,
   }) : super(key: key);
 
   @override
@@ -26,14 +32,19 @@ class GridButton extends StatelessWidget {
           AspectRatio(
             aspectRatio: 1,
             child: GlassMorphism(
-              child: Icon(icon, weight: 100, size: 50, color: Colors.white),
+              child: Icon(
+                icon,
+                weight: 100,
+                size: 50,
+                color: iconColor ?? Colors.white,
+              ),
             ),
           ),
           const SizedBox(height: Layout.padding / 2),
           Text(
             text,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: textColor ?? Colors.white,
             ),
           ),
         ],
@@ -51,7 +62,7 @@ class GridButtons extends StatelessWidget {
       GridButton(
         text: "Add",
         icon: Symbols.add_rounded,
-        onTap: () => TransactionEditorSheet.open(context),
+        onTap: () => openModal(context, const TransactionEditorSheet()),
       ),
     ];
 
