@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:coin_log/layout.dart';
+import 'package:coin_log/morphism/glass_morphism.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
@@ -15,20 +16,12 @@ class GridButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: ClipRRect(
-        borderRadius: Layout.borderRadius.br,
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-          child: InkWell(
-            borderRadius: Layout.borderRadius.br,
-            onTap: onTap,
-            child: Container(
-              color: Colors.white.withOpacity(0.1),
-              child: Icon(icon, weight: 200, size: 50, color: Colors.white),
-            ),
-          ),
+    return InkWell(
+      onTap: onTap,
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: GlassMorphism(
+          child: Icon(icon, weight: 200, size: 50, color: Colors.white),
         ),
       ),
     );

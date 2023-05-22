@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 class BackgroundImage extends StatelessWidget {
@@ -9,7 +7,7 @@ class BackgroundImage extends StatelessWidget {
   const BackgroundImage({
     Key? key,
     required this.image,
-    this.opacity = 0.4,
+    this.opacity = 0.6,
   }) : super(key: key);
 
   @override
