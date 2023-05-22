@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
           BackgroundImage(
             image: NetworkImage("https://picsum.photos/1000/3000"),
           ),
-          BalanceInfo(),
+          SafeArea(child: BalanceInfo()),
         ],
       ),
       bottomSheet: BottomSheet(
