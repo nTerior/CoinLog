@@ -1,4 +1,5 @@
 import 'package:coin_log/layout.dart';
+import 'package:coin_log/modals/add_transaction.dart';
 import 'package:coin_log/morphism/glass_morphism.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -25,7 +26,7 @@ class GridButton extends StatelessWidget {
           AspectRatio(
             aspectRatio: 1,
             child: GlassMorphism(
-              child: Icon(icon, weight: 200, size: 50, color: Colors.white),
+              child: Icon(icon, weight: 100, size: 50, color: Colors.white),
             ),
           ),
           const SizedBox(height: Layout.padding / 2),
@@ -44,18 +45,35 @@ class GridButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const children = [
-      GridButton(text: "Add", icon: Symbols.add_rounded),
-      GridButton(text: "Stats", icon: Symbols.donut_large_rounded),
-      GridButton(text: "Limits", icon: Symbols.filter_none_rounded),
-      GridButton(text: "Settings", icon: Symbols.settings),
+    final children = [
+      GridButton(
+        text: "Add",
+        icon: Symbols.add_rounded,
+        onTap: () => showModalBottomSheet(
+          context: context,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(Layout.borderRadius),
+              bottom: Radius.zero,
+            ),
+          ),
+          builder: (context) => Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: const AddTransactionSheet(),
+          ),
+        ),
+      ),
     ];
 
     return MasonryGridView.count(
       shrinkWrap: true,
       crossAxisCount: 4,
       crossAxisSpacing: Layout.padding,
-      itemCount: 4,
+      itemCount: children.length,
       itemBuilder: (context, index) => children[index],
     );
   }

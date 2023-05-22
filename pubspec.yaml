@@ -41,6 +41,9 @@ dependencies:
   material_symbols_icons: ^4.39.5
   provider: ^6.0.5
   flutter_staggered_grid_view: ^0.6.2
+  non_uniform_border: ^1.0.0
+  flutter_form_builder: ^9.0.0
+  form_builder_validators: ^9.0.0
 
 dev_dependencies:
   flutter_test:

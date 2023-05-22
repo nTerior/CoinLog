@@ -32,8 +32,27 @@ class CoinLogApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
           DefaultWidgetsLocalizations.delegate,
         ],
+        themeMode: ThemeMode.system,
         theme: ThemeData(
           useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+          textSelectionTheme: TextSelectionThemeData(
+            cursorColor: Colors.white,
+            selectionColor: Colors.white.withOpacity(0.1),
+            selectionHandleColor: Colors.white.withOpacity(0.5),
+          ),
+        ),
+        darkTheme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.white,
+            brightness: Brightness.dark,
+          ),
+          textSelectionTheme: TextSelectionThemeData(
+            cursorColor: Colors.white,
+            selectionColor: Colors.white.withOpacity(0.1),
+            selectionHandleColor: Colors.white.withOpacity(0.5),
+          ),
         ),
         home: const HomePage(),
       ),
