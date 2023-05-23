@@ -1,8 +1,6 @@
-import 'package:camera/camera.dart';
 import 'package:coin_log/finance/finance.dart';
 import 'package:coin_log/finance/transaction.dart';
 import 'package:coin_log/pages/home_page.dart';
-import 'package:coin_log/scan/receipt_scanner.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,8 +16,6 @@ void main() async {
   if (kDebugMode) {
     Wakelock.enable();
   }
-
-  cameras = await availableCameras();
 
   await Hive.initFlutter();
   Hive.registerAdapter(TransactionAdapter());
