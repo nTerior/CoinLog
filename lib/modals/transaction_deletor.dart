@@ -57,6 +57,7 @@ class TransactionDeletorModal extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: Layout.padding),
       ],
     );
   }
