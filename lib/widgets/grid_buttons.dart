@@ -1,4 +1,5 @@
 import 'package:coin_log/layout.dart';
+import 'package:coin_log/modals/settings.dart';
 import 'package:coin_log/modals/transaction_editor.dart';
 import 'package:coin_log/morphism/glass_morphism.dart';
 import 'package:coin_log/utils.dart';
@@ -67,7 +68,7 @@ class GridButtons extends StatelessWidget {
       GridButton(
         text: "Settings",
         icon: Symbols.settings,
-        onTap: () {},
+        onTap: () => openModal(context, const SettingsModal()),
       ),
     ];
 

@@ -6,6 +6,8 @@ void openModal(BuildContext context, Widget modal) {
   showModalBottomSheet(
     context: context,
     elevation: 0,
+    useSafeArea: true,
+    isScrollControlled: true,
     backgroundColor: Colors.transparent,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
