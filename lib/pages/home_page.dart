@@ -11,14 +11,15 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.passthrough,
-        children: [
-          const BackgroundImage(
-            image: AssetImage(Assets.assetsBackground),
-          ),
-          SafeArea(
+    return Stack(
+      fit: StackFit.passthrough,
+      children: [
+        const BackgroundImage(
+          image: AssetImage(Assets.assetsBackground),
+        ),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          body: SafeArea(
             child: Padding(
               padding: Layout.padding.hPad,
               child: NotificationListener<OverscrollIndicatorNotification>(
@@ -40,8 +41,8 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
