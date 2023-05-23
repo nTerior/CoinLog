@@ -6,8 +6,11 @@ import 'package:coin_log/utils.dart';
 import 'package:coin_log/widgets/custom_slidable_action.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
+
+part 'transaction.g.dart';
 
 extension DateUtils on DateTime {
   String get formatDate => DateFormat.yMMMd(Intl.systemLocale).format(this);
@@ -15,16 +18,27 @@ extension DateUtils on DateTime {
   String get formatTime => DateFormat.Hm(Intl.systemLocale).format(this);
 }
 
-class Transaction extends StatelessWidget {
-  final String title;
-  final double amount;
-  final DateTime dateTime;
+@HiveType(typeId: 0)
+class Transaction {
+  @HiveField(0)
+  late String title;
 
-  const Transaction({
-    super.key,
-    required this.title,
-    required this.amount,
-    required this.dateTime,
+  @HiveField(1)
+  late double amount;
+
+  @HiveField(2)
+  late DateTime dateTime;
+
+  late int boxIndex;
+
+  Widget get widget => TransactionWidget(transaction: this);
+}
+
+class TransactionWidget extends StatelessWidget {
+  final Transaction transaction;
+
+  const TransactionWidget({
+    super.key, required this.transaction,
   });
 
   @override
@@ -41,7 +55,7 @@ class Transaction extends StatelessWidget {
             onPressed: (context) => openModal(
               context,
               TransactionEditorSheet(
-                transaction: this,
+                transaction: transaction,
               ),
             ),
             icon: const Icon(Symbols.edit, fill: 1),
@@ -51,7 +65,7 @@ class Transaction extends StatelessWidget {
             onPressed: (context) => openModal(
               context,
               TransactionDeletorModal(
-                transaction: this,
+                transaction: transaction,
               ),
             ),
             icon: Icon(
@@ -72,13 +86,13 @@ class Transaction extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  transaction.title,
                   style: const TextStyle(color: Colors.white),
                 ),
                 Row(
                   children: [
                     Text(
-                      dateTime.formatDate,
+                      transaction.dateTime.formatDate,
                       style: const TextStyle(
                         fontWeight: FontWeight.w100,
                       ),
@@ -95,7 +109,7 @@ class Transaction extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      dateTime.formatTime,
+                      transaction.dateTime.formatTime,
                       style: const TextStyle(
                         fontWeight: FontWeight.w100,
                       ),
@@ -105,9 +119,9 @@ class Transaction extends StatelessWidget {
               ],
             ),
             Text(
-              "${amount >= 0 ? "+" : ""}${amount.asCurrency("€")}",
+              "${transaction.amount >= 0 ? "+" : ""}${transaction.amount.asCurrency("€")}",
               style: TextStyle(
-                color: amount < 0
+                color: transaction.amount < 0
                     ? Theme.of(context).colorScheme.error
                     : Colors.green,
                 fontWeight: FontWeight.bold,

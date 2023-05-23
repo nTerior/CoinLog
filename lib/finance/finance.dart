@@ -1,6 +1,9 @@
 import 'package:coin_log/finance/transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
+
+final _transactionsBox = "transactions";
 
 extension MoneyUtils on double {
   String asCurrency(String symbol) {
@@ -19,19 +22,7 @@ class Finance extends ChangeNotifier {
     notifyListeners();
   }
 
-  final List<Transaction> _transactions = [
-    Transaction(title: "1. Handy", amount: -500, dateTime: DateTime.now().subtract(const Duration(days: 4))),
-    Transaction(title: "1. Handy", amount: -500, dateTime: DateTime.now().subtract(const Duration(days: 4))),
-    Transaction(title: "1. Handy", amount: -500, dateTime: DateTime.now().subtract(const Duration(days: 4))),
-    Transaction(title: "1. Handy", amount: -500, dateTime: DateTime.now().subtract(const Duration(days: 4))),
-    Transaction(title: "1. Handy", amount: -500, dateTime: DateTime.now().subtract(const Duration(days: 4))),
-    Transaction(title: "1. Handy", amount: -500, dateTime: DateTime.now().subtract(const Duration(days: 4))),
-    Transaction(title: "1. Handy", amount: -500, dateTime: DateTime.now().subtract(const Duration(days: 4))),
-    Transaction(title: "2. Handy", amount: 500, dateTime: DateTime.now().subtract(const Duration(days: 3))),
-    Transaction(title: "3. Handy", amount: -500, dateTime: DateTime.now().subtract(const Duration(days: 2))),
-    Transaction(title: "4. Handy", amount: 500, dateTime: DateTime.now().subtract(const Duration(days: 1))),
-    Transaction(title: "5. Handy", amount: -500, dateTime: DateTime.now()),
-  ];
+  final List<Transaction> _transactions = [];
 
   List<Transaction> get transactions => _transactions;
 
@@ -39,18 +30,33 @@ class Finance extends ChangeNotifier {
     _transactions.add(transaction);
     _balance += transaction.amount;
     notifyListeners();
+
+    final box = Hive.box<Transaction>(_transactionsBox);
+    box.add(transaction).then((value) => transaction.boxIndex = value);
   }
 
   void remove(Transaction transaction) {
     _transactions.remove(transaction);
     _balance -= transaction.amount;
     notifyListeners();
+
+    final box = Hive.box<Transaction>(_transactionsBox);
+    box.deleteAt(transaction.boxIndex);
   }
 
-  void editTransaction(Transaction old, Transaction values) {
-    final index = _transactions.indexOf(old);
-    _transactions.remove(old);
-    _transactions.insert(index, values);
+  void editTransaction(Transaction t) {
     notifyListeners();
+
+    final box = Hive.box<Transaction>(_transactionsBox);
+    box.putAt(t.boxIndex, t);
+  }
+
+  Future<void> initFinances() async {
+    final box = await Hive.openBox<Transaction>(_transactionsBox);
+    int index = 0;
+    for(final t in box.values) {
+      _transactions.add(t..boxIndex = index++);
+      _balance += t.amount;
+    }
   }
 }

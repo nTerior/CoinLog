@@ -78,13 +78,11 @@ class _TransactionEditorSheetState extends State<TransactionEditorSheet> {
                   children: [
                     Text(
                       _initialTransaction == null ? "Add " : "Edit ",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineMedium!
-                          .copyWith(
-                            fontWeight: FontWeight.w100,
-                            color: Colors.white.withOpacity(0.5),
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                fontWeight: FontWeight.w100,
+                                color: Colors.white.withOpacity(0.5),
+                              ),
                     ),
                     Expanded(
                       child: FormBuilderTextField(
@@ -173,7 +171,8 @@ class _TransactionEditorSheetState extends State<TransactionEditorSheet> {
                   keyboardType: TextInputType.number,
                   validator: FormBuilderValidators.required(),
                   initialValue:
-                      _initialTransaction?.amount.abs().toStringAsFixed(2) ?? "",
+                      _initialTransaction?.amount.abs().toStringAsFixed(2) ??
+                          "",
                 ),
               ),
             ],
@@ -184,29 +183,27 @@ class _TransactionEditorSheetState extends State<TransactionEditorSheet> {
               if (!_formKey.currentState!.validate()) return;
 
               if (_initialTransaction != null) {
-                Provider.of<Finance>(context, listen: false).editTransaction(
-                  _initialTransaction!,
-                  Transaction(
-                    title: _formKey.currentState!.fields["title"]!.value,
-                    amount: double.parse(
-                            _formKey.currentState!.fields["amount"]!.value) *
-                        (_isExpense ? -1 : 1),
-                    dateTime: _selectedDate,
-                  ),
-                );
+                _initialTransaction!
+                  ..title = _formKey.currentState!.fields["title"]!.value
+                  ..amount = double.parse(
+                          _formKey.currentState!.fields["amount"]!.value) *
+                      (_isExpense ? -1 : 1)
+                  ..dateTime = _selectedDate;
+
+                Provider.of<Finance>(context, listen: false)
+                    .editTransaction(_initialTransaction!);
                 Navigator.pop(context);
                 return;
               }
 
-              Provider.of<Finance>(context, listen: false).add(
-                Transaction(
-                  title: _formKey.currentState!.fields["title"]!.value,
-                  amount: double.parse(
-                          _formKey.currentState!.fields["amount"]!.value) *
-                      (_isExpense ? -1 : 1),
-                  dateTime: _selectedDate,
-                ),
-              );
+              final t = Transaction()
+                ..title = _formKey.currentState!.fields["title"]!.value
+                ..amount = double.parse(
+                        _formKey.currentState!.fields["amount"]!.value) *
+                    (_isExpense ? -1 : 1)
+                ..dateTime = _selectedDate;
+
+              Provider.of<Finance>(context, listen: false).add(t);
               Navigator.pop(context);
             },
             child: GlassMorphism(

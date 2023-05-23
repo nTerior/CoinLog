@@ -23,7 +23,7 @@ void openModal(BuildContext context, Widget modal) {
           top: Radius.circular(Layout.borderRadius),
           bottom: Radius.zero,
         ),
-        padding: Layout.padding.pad,
+        padding: Layout.padding.tlrPad,
         child: modal,
       ),
     ),
