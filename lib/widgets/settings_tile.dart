@@ -4,16 +4,25 @@ import 'package:flutter/material.dart';
 class ToggleableSettingsInputTile extends StatefulWidget {
   final String title;
 
+  final dynamic initialValue;
   final bool initiallyEnabled;
+
   final String suffix;
 
   final TextInputType? type;
+
+  final void Function(String value) onEdit;
+  final void Function(bool value) onToggle;
 
   const ToggleableSettingsInputTile({
     Key? key,
     required this.initiallyEnabled,
     required this.title,
-    this.type, required this.suffix,
+    this.type,
+    required this.suffix,
+    required this.onEdit,
+    required this.onToggle,
+    this.initialValue,
   }) : super(key: key);
 
   @override
@@ -30,8 +39,15 @@ class _ToggleableSettingsInputTileState
 
   @override
   void initState() {
+    _controller.text = widget.initialValue?.toString() ?? "";
     _enabled = widget.initiallyEnabled;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -40,9 +56,6 @@ class _ToggleableSettingsInputTileState
       children: [
         Text(
           widget.title,
-          style: TextStyle(
-            color: !_enabled ? Theme.of(context).disabledColor : null,
-          ),
         ),
         const SizedBox(width: Layout.padding),
         Expanded(
@@ -56,6 +69,7 @@ class _ToggleableSettingsInputTileState
               border: InputBorder.none,
               suffixText: widget.suffix,
             ),
+            onChanged: widget.onEdit,
           ),
         ),
         const SizedBox(width: Layout.padding),
@@ -63,6 +77,7 @@ class _ToggleableSettingsInputTileState
           activeColor: Colors.white,
           value: _enabled,
           onChanged: (bool value) async {
+            widget.onToggle(value);
             setState(() {
               _enabled = value;
               if (value && _controller.text.isEmpty) {
