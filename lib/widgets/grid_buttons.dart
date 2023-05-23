@@ -9,7 +9,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 class GridButton extends StatelessWidget {
   final String text;
   final IconData icon;
-  final void Function()? onTap;
+  final void Function() onTap;
 
   final Color? textColor;
   final Color? iconColor;
@@ -18,37 +18,35 @@ class GridButton extends StatelessWidget {
     Key? key,
     required this.text,
     required this.icon,
-    this.onTap,
+    required this.onTap,
     this.textColor,
     this.iconColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Column(
-        children: [
-          AspectRatio(
+    return Column(
+      children: [
+        GlassMorphismButton(
+          onPressed: onTap,
+          child: AspectRatio(
             aspectRatio: 1,
-            child: GlassMorphism(
-              child: Icon(
-                icon,
-                weight: 100,
-                size: 50,
-                color: iconColor ?? Colors.white,
-              ),
+            child: Icon(
+              icon,
+              weight: 100,
+              size: 50,
+              color: iconColor ?? Colors.white,
             ),
           ),
-          const SizedBox(height: Layout.padding / 2),
-          Text(
-            text,
-            style: TextStyle(
-              color: textColor ?? Colors.white,
-            ),
+        ),
+        const SizedBox(height: Layout.padding / 2),
+        Text(
+          text,
+          style: TextStyle(
+            color: textColor ?? Colors.white,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -63,6 +61,13 @@ class GridButtons extends StatelessWidget {
         text: "Add",
         icon: Symbols.add_rounded,
         onTap: () => openModal(context, const TransactionEditorSheet()),
+      ),
+      Container(height: 1),
+      Container(height: 1),
+      GridButton(
+        text: "Settings",
+        icon: Symbols.settings,
+        onTap: () {},
       ),
     ];
 

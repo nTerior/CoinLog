@@ -7,7 +7,6 @@ import 'package:non_uniform_border/non_uniform_border.dart';
 class GlassMorphism extends StatelessWidget {
   final Widget? child;
   final BorderRadiusGeometry? borderRadius;
-  final BoxBorder? border;
 
   final double topBorderWidth;
   final double leftBorderWidth;
@@ -22,7 +21,6 @@ class GlassMorphism extends StatelessWidget {
     Key? key,
     this.child,
     this.borderRadius,
-    this.border,
     this.topBorderWidth = 1,
     this.leftBorderWidth = 1,
     this.rightBorderWidth = 1,
@@ -54,6 +52,61 @@ class GlassMorphism extends StatelessWidget {
           height: height,
           padding: padding,
           child: child,
+        ),
+      ),
+    );
+  }
+}
+
+class GlassMorphismButton extends StatelessWidget {
+  final Widget? child;
+  final BorderRadiusGeometry? borderRadius;
+
+  final double topBorderWidth;
+  final double leftBorderWidth;
+  final double rightBorderWidth;
+  final double bottomBorderWidth;
+
+  final double? width;
+  final double? height;
+
+  final EdgeInsetsGeometry? padding;
+
+  final void Function() onPressed;
+
+  const GlassMorphismButton({
+    Key? key,
+    this.child,
+    this.borderRadius,
+    this.topBorderWidth = 1,
+    this.leftBorderWidth = 1,
+    this.rightBorderWidth = 1,
+    this.bottomBorderWidth = 1,
+    this.width,
+    this.height,
+    this.padding,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: borderRadius ?? Layout.borderRadius.br,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          child: GlassMorphism(
+            borderRadius: borderRadius ?? Layout.borderRadius.br,
+            width: width,
+            height: height,
+            padding: padding,
+            bottomBorderWidth: bottomBorderWidth,
+            leftBorderWidth: leftBorderWidth,
+            rightBorderWidth: rightBorderWidth,
+            topBorderWidth: topBorderWidth,
+            child: child,
+          ),
         ),
       ),
     );

@@ -178,8 +178,9 @@ class _TransactionEditorSheetState extends State<TransactionEditorSheet> {
             ],
           ),
           const SizedBox(height: Layout.padding),
-          InkWell(
-            onTap: () {
+          GlassMorphismButton(
+            height: 50,
+            onPressed: () {
               if (!_formKey.currentState!.validate()) return;
 
               if (_initialTransaction != null) {
@@ -206,23 +207,20 @@ class _TransactionEditorSheetState extends State<TransactionEditorSheet> {
               Provider.of<Finance>(context, listen: false).add(t);
               Navigator.pop(context);
             },
-            child: GlassMorphism(
-              height: 50,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const Spacer(),
-                  Icon(
-                    _initialTransaction != null
-                        ? Symbols.save
-                        : Symbols.add_rounded,
-                    weight: 100,
-                    size: 40,
-                  ),
-                  Text(_initialTransaction != null ? " Save" : " Add"),
-                  const Spacer(),
-                ],
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const Spacer(),
+                Icon(
+                  _initialTransaction != null
+                      ? Symbols.save
+                      : Symbols.add_rounded,
+                  weight: 100,
+                  size: 40,
+                ),
+                Text(_initialTransaction != null ? " Save" : " Add"),
+                const Spacer(),
+              ],
             ),
           ),
           const SizedBox(height: Layout.padding),
