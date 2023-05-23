@@ -1,11 +1,15 @@
+import 'package:camera/camera.dart';
 import 'package:coin_log/layout.dart';
 import 'package:coin_log/modals/settings.dart';
 import 'package:coin_log/modals/transaction_editor.dart';
 import 'package:coin_log/morphism/glass_morphism.dart';
+import 'package:coin_log/scan/receipt_scanner.dart';
 import 'package:coin_log/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
+import '../scan/camera.dart';
 
 class GridButton extends StatelessWidget {
   final String text;
@@ -63,7 +67,26 @@ class GridButtons extends StatelessWidget {
         icon: Symbols.add_rounded,
         onTap: () => openModal(context, const TransactionEditorSheet()),
       ),
-      Container(height: 1),
+      GridButton(
+        text: "Scan",
+        icon: Symbols.scan,
+        onTap: () {
+          cameraController = CameraController(
+            cameras[0],
+            ResolutionPreset.max,
+            enableAudio: false,
+          );
+
+          cameraController!.initialize().then(
+                (value) => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ReceiptScanner(),
+                  ),
+                ),
+              );
+        },
+      ),
       Container(height: 1),
       GridButton(
         text: "Settings",
