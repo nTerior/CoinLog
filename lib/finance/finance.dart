@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 
-final _transactionsBox = "transactions";
+const _transactionsBox = "transactions";
 
 extension MoneyUtils on double {
   String asCurrency(String symbol) {
