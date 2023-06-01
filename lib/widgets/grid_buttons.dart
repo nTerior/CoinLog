@@ -106,6 +106,22 @@ class GridButtons extends StatelessWidget {
         opaque: false,
         pageBuilder: (context, animation, secondaryAnimation) =>
             ReceiptScannerPage(request: request),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(0.0, 1.0);
+          const end = Offset.zero;
+          final tween = Tween(begin: begin, end: end);
+          final offsetAnimation = animation.drive(
+            tween.chain(
+              CurveTween(
+                curve: Curves.ease,
+              ),
+            ),
+          );
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
       ),
     );
   }
