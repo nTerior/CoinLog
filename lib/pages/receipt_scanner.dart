@@ -163,7 +163,7 @@ class _ReceiptScannerPageState extends State<ReceiptScannerPage> {
               future: _data,
               builder: (context, snapshot) {
                 if (snapshot.connectionState != ConnectionState.done) {
-                  return const CircularProgressIndicator();
+                  return const CircularProgressIndicator(color: Colors.white);
                 }
                 if (snapshot.hasError) {
                   return Text(snapshot.error.toString());
