@@ -1,7 +1,11 @@
 import 'package:coin_log/finance/finance.dart';
+import 'package:coin_log/finance/limits.dart';
 import 'package:coin_log/finance/transaction.dart';
 import 'package:coin_log/layout.dart';
+import 'package:coin_log/modals/choice_selector.dart';
 import 'package:coin_log/morphism/glass_morphism.dart';
+
+import 'package:coin_log/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -181,32 +185,70 @@ class _TransactionEditorSheetState extends State<TransactionEditorSheet> {
           const SizedBox(height: Layout.padding),
           GlassMorphismButton(
             height: 50,
-            onPressed: () {
+            onPressed: () async {
               if (!_formKey.currentState!.validate()) return;
+              FocusManager.instance.primaryFocus?.unfocus();
+
+              final amount =
+                  double.parse(_formKey.currentState!.fields["amount"]!.value) *
+                      (_isExpense ? -1 : 1);
+
+              final exceeded = Limits.willExceedAnyLimit(
+                context,
+                _initialTransaction != null
+                    ? _initialTransaction!.amount - amount
+                    : amount,
+              );
+
+              if (exceeded.limit != null && amount < 0) {
+                final decision = await openModal<bool>(
+                  context,
+                  ChoiceSelectorModal(
+                    text:
+                        "You are exceeding your ${exceeded.limit} by ${(-exceeded.remaining).asCurrency("€")}!",
+                    choices: const [
+                      SelectorChoice(
+                        name: "Ignore Limit",
+                        icon: Symbols.warning,
+                        value: true,
+                      ),
+                      SelectorChoice(
+                        name: "Cancel",
+                        icon: Symbols.cancel,
+                        value: false,
+                      ),
+                    ],
+                  ),
+                );
+
+                if (decision == null || !decision) {
+                  return;
+                }
+              }
 
               if (_initialTransaction != null) {
                 _initialTransaction!
                   ..title = _formKey.currentState!.fields["title"]!.value
-                  ..amount = double.parse(
-                          _formKey.currentState!.fields["amount"]!.value) *
-                      (_isExpense ? -1 : 1)
+                  ..amount = amount
                   ..dateTime = _selectedDate;
 
-                Provider.of<Finance>(context, listen: false)
-                    .editTransaction(_initialTransaction!);
-                Navigator.pop(context);
+                if (context.mounted) {
+                  Provider.of<Finance>(context, listen: false)
+                      .editTransaction(_initialTransaction!);
+                  Navigator.pop(context);
+                }
                 return;
               }
 
               final t = Transaction()
                 ..title = _formKey.currentState!.fields["title"]!.value
-                ..amount = double.parse(
-                        _formKey.currentState!.fields["amount"]!.value) *
-                    (_isExpense ? -1 : 1)
+                ..amount = amount
                 ..dateTime = _selectedDate;
 
-              Provider.of<Finance>(context, listen: false).add(t);
-              Navigator.pop(context);
+              if (context.mounted) {
+                Provider.of<Finance>(context, listen: false).add(t);
+                Navigator.pop(context);
+              }
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
