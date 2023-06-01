@@ -32,7 +32,8 @@ class Finance extends ChangeNotifier {
     notifyListeners();
 
     final box = Hive.box<Transaction>(_transactionsBox);
-    box.add(transaction).then((value) => transaction.boxIndex = value);
+    box.add(transaction);
+    box.flush();
   }
 
   void remove(Transaction transaction) {
@@ -40,22 +41,19 @@ class Finance extends ChangeNotifier {
     _balance -= transaction.amount;
     notifyListeners();
 
-    final box = Hive.box<Transaction>(_transactionsBox);
-    box.deleteAt(transaction.boxIndex);
+    transaction.delete();
   }
 
   void editTransaction(Transaction t) {
     notifyListeners();
 
-    final box = Hive.box<Transaction>(_transactionsBox);
-    box.putAt(t.boxIndex, t);
+    t.save();
   }
 
   Future<void> initFinances() async {
     final box = await Hive.openBox<Transaction>(_transactionsBox);
-    int index = 0;
     for(final t in box.values) {
-      _transactions.add(t..boxIndex = index++);
+      _transactions.add(t);
       _balance += t.amount;
     }
   }

@@ -19,7 +19,7 @@ extension DateUtils on DateTime {
 }
 
 @HiveType(typeId: 0)
-class Transaction {
+class Transaction extends HiveObject {
   @HiveField(0)
   late String title;
 
@@ -28,8 +28,6 @@ class Transaction {
 
   @HiveField(2)
   late DateTime dateTime;
-
-  late int boxIndex;
 
   Widget get widget => TransactionWidget(transaction: this);
 }
