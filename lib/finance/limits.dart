@@ -80,11 +80,11 @@ class MinimumBalanceLimit extends ExpenseLimit {
   @override
   double calcRemainingLimit(List<Transaction> transactions) =>
       transactions.isEmpty
-          ? limit
-          : limit -
-              transactions
+          ? -limit
+          : transactions
                   .map((e) => e.amount)
-                  .reduce((value, element) => element + value);
+                  .reduce((value, element) => element + value) -
+              limit;
 }
 
 late Settings _settings;

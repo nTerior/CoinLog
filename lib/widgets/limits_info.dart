@@ -9,10 +9,8 @@ import 'package:provider/provider.dart';
 class LimitsInfo extends StatelessWidget {
   const LimitsInfo({Key? key}) : super(key: key);
 
-  Widget limitInfo(BuildContext context, String text, double remaining,
-          [TextAlign? align]) =>
+  Widget limitInfo(BuildContext context, String text, double remaining) =>
       RichText(
-        textAlign: align ?? TextAlign.left,
         text: TextSpan(
           text: "$text\n",
           style: Theme.of(context).textTheme.bodyLarge!.copyWith(
@@ -37,9 +35,6 @@ class LimitsInfo extends StatelessWidget {
     final settings = context.watch<Settings>();
     final finance = context.watch<Finance>();
 
-    final remaningBalanceLimit = Limits.minimumBalanceLimit.calcRemainingLimit(
-      finance.transactions,
-    );
     final remaningMonthlyLimit = Limits.monthlyLimit.calcRemainingLimit(
       finance.transactions,
     );
@@ -58,39 +53,18 @@ class LimitsInfo extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (settings.balanceLimitEnabled)
-                  limitInfo(
-                      context, "Minimum Balance Limit", remaningBalanceLimit),
-                Column(
-                  // ToDo: Improve when custom limits
-                  crossAxisAlignment: settings.balanceLimitEnabled
-                      ? CrossAxisAlignment.end
-                      : CrossAxisAlignment.start,
-                  children: [
-                    if (settings.monthlyLimitEnabled)
-                      limitInfo(
-                        context,
-                        "Monthly Limit",
-                        remaningMonthlyLimit,
-                        // ToDo: Improve when custom limits
-                        settings.balanceLimitEnabled ? TextAlign.right : null,
-                      ),
-                    if (settings.weeklyLimitEnabled)
-                      limitInfo(
-                        context,
-                        "Weekly Limit",
-                        remaningWeeklyLimit,
-                        // ToDo: Improve when custom limits
-                        settings.balanceLimitEnabled ? TextAlign.right : null,
-                      ),
-                  ],
-                ),
-              ],
-            ),
+            if (settings.monthlyLimitEnabled)
+              limitInfo(
+                context,
+                "Monthly Limit",
+                remaningMonthlyLimit,
+              ),
+            if (settings.weeklyLimitEnabled)
+              limitInfo(
+                context,
+                "Weekly Limit",
+                remaningWeeklyLimit,
+              ),
           ],
         ),
       ),
