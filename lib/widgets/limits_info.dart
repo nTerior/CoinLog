@@ -42,7 +42,7 @@ class LimitsInfo extends StatelessWidget {
       finance.transactions,
     );
 
-    if (!settings.balanceLimitEnabled && !settings.weeklyLimitEnabled && !settings.monthlyLimitEnabled) {
+    if (!settings.weeklyLimitEnabled && !settings.monthlyLimitEnabled) {
       return const SizedBox.shrink();
     }
 

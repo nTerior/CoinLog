@@ -37,7 +37,7 @@ abstract class TimelyExpenseLimit extends ExpenseLimit {
 
 class WeeklyExpenseLimit extends TimelyExpenseLimit {
   @override
-  double get limit => _settings.monthlyLimit ?? 0;
+  double get limit => _settings.weeklyLimit ?? 0;
 
   @override
   DateTime getFirstIncludedDate() {
@@ -126,13 +126,13 @@ class Limits {
     final monthlyRemain =
         monthlyLimit.calcRemainingLimit(finance.transactions) + change;
 
-    if (minBalanceRemain < 0) {
+    if (_settings.balanceLimitEnabled && minBalanceRemain < 0) {
       return (limit: minimumBalanceLimit.name, remaining: minBalanceRemain);
     }
-    if (weeklyRemain < 0) {
+    if (_settings.weeklyLimitEnabled && weeklyRemain < 0) {
       return (limit: weeklyLimit.name, remaining: weeklyRemain);
     }
-    if (monthlyRemain < 0) {
+    if (_settings.monthlyLimitEnabled && monthlyRemain < 0) {
       return (limit: monthlyLimit.name, remaining: monthlyRemain);
     }
     return (limit: null, remaining: 0);
