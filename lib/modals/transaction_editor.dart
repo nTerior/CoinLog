@@ -47,18 +47,19 @@ class _TransactionEditorSheetState extends State<TransactionEditorSheet> {
 
     if (date == null) return;
 
-    final time = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(_selectedDate),
-    );
-
-    _selectedDate = DateTime(
-      date.year,
-      date.month,
-      date.day,
-      time?.hour ?? date.hour,
-      time?.minute ?? date.minute,
-    );
+    if (context.mounted) {
+      final time = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(_selectedDate),
+      );
+      _selectedDate = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        time?.hour ?? date.hour,
+        time?.minute ?? date.minute,
+      );
+    }
   }
 
   @override

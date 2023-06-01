@@ -63,67 +63,75 @@ class GridButtons extends StatelessWidget {
   void handleScanClick(BuildContext context) async {
     final url = await getWorkingReceiptScannerUrl();
     if (url == null) {
-      openModal(
-        context,
-        const ChoiceSelectorModal(
-          text:
-              "An internet connection is required in order to use the receipt scanner!",
-          choices: [
-            SelectorChoice(name: "Close", icon: Symbols.close, value: null),
-          ],
-        ),
-      );
+      if (context.mounted) {
+        openModal(
+          context,
+          const ChoiceSelectorModal(
+            text:
+                "An internet connection is required in order to use the receipt scanner!",
+            choices: [
+              SelectorChoice(name: "Close", icon: Symbols.close, value: null),
+            ],
+          ),
+        );
+      }
       return;
     }
 
-    final result = await openModal<ImageSource>(
-      context,
-      const ChoiceSelectorModal(
-        text: "Scan receipt from:",
-        choices: [
-          SelectorChoice(
-            name: "Camera",
-            icon: Symbols.camera,
-            value: ImageSource.camera,
-          ),
-          SelectorChoice(
-            name: "Gallery",
-            icon: Symbols.gallery_thumbnail,
-            value: ImageSource.gallery,
-          ),
-        ],
-      ),
-    );
-    if (result == null) return;
-
-    final image = await ImagePicker().pickImage(source: result);
-    if (image == null) return;
-
-    final request = await buildRequest(url, image.path);
-
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        opaque: false,
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            ReceiptScannerPage(request: request),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(0.0, 1.0);
-          const end = Offset.zero;
-          final tween = Tween(begin: begin, end: end);
-          final offsetAnimation = animation.drive(
-            tween.chain(
-              CurveTween(
-                curve: Curves.ease,
-              ),
+    if (context.mounted) {
+      final result = await openModal<ImageSource>(
+        context,
+        const ChoiceSelectorModal(
+          text: "Scan receipt from:",
+          choices: [
+            SelectorChoice(
+              name: "Camera",
+              icon: Symbols.camera,
+              value: ImageSource.camera,
             ),
-          );
-          return SlideTransition(
-            position: offsetAnimation,
-            child: child,
-          );
-        },
-      ),
-    );
+            SelectorChoice(
+              name: "Gallery",
+              icon: Symbols.gallery_thumbnail,
+              value: ImageSource.gallery,
+            ),
+          ],
+        ),
+      );
+
+      if (result == null) return;
+
+      final image = await ImagePicker().pickImage(source: result);
+      if (image == null) return;
+
+      final request = await buildRequest(url, image.path);
+
+      if (context.mounted) {
+        Navigator.of(context).push(
+          PageRouteBuilder(
+            opaque: false,
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                ReceiptScannerPage(request: request),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              const begin = Offset(0.0, 1.0);
+              const end = Offset.zero;
+              final tween = Tween(begin: begin, end: end);
+              final offsetAnimation = animation.drive(
+                tween.chain(
+                  CurveTween(
+                    curve: Curves.ease,
+                  ),
+                ),
+              );
+              return SlideTransition(
+                position: offsetAnimation,
+                child: child,
+              );
+            },
+          ),
+        );
+      }
+    }
   }
 
   @override

@@ -23,8 +23,7 @@ Future<bool> _canConnectToServer(String host) async {
   try {
     final result = await InternetAddress.lookup(host);
     return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
-  } on SocketException catch (e) {
-    print(e);
+  } on SocketException catch (_) {
     return false;
   }
 }
