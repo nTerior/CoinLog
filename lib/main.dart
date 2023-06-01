@@ -1,4 +1,5 @@
 import 'package:coin_log/finance/finance.dart';
+import 'package:coin_log/finance/limits.dart';
 import 'package:coin_log/finance/transaction.dart';
 import 'package:coin_log/pages/home_page.dart';
 import 'package:coin_log/settings.dart';
@@ -11,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
 final _finance = Finance();
+final _settings = Settings();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,8 +23,9 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(TransactionAdapter());
 
-  await Settings.loadSettings();
+  await _settings.loadSettings();
   await _finance.initFinances();
+  Limits.init(_settings);
 
   await findSystemLocale();
   runApp(const CoinLogApp());
@@ -36,6 +39,7 @@ class CoinLogApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: _finance),
+        ChangeNotifierProvider.value(value: _settings),
       ],
       child: MaterialApp(
         title: "CoinLog",

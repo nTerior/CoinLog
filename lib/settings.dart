@@ -1,60 +1,68 @@
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-class Settings {
-  static late final Box _box;
+class Settings extends ChangeNotifier {
+  late final Box _box;
 
   // Limits
-  static bool _weeklyLimitEnabled = false;
-  static double? _weeklyLimit;
+  bool _weeklyLimitEnabled = false;
+  double? _weeklyLimit;
 
-  static bool _monthlyLimitEnabled = false;
-  static double? _monthlyLimit;
+  bool _monthlyLimitEnabled = false;
+  double? _monthlyLimit;
 
-  static bool _balanceLimitEnabled = false;
-  static double? _balanceLimit;
+  bool _balanceLimitEnabled = false;
+  double? _balanceLimit;
 
-  static bool get weeklyLimitEnabled => _weeklyLimitEnabled;
+  bool get weeklyLimitEnabled => _weeklyLimitEnabled;
 
-  static double? get weeklyLimit => _weeklyLimit;
+  double? get weeklyLimit => _weeklyLimit;
 
-  static bool get monthlyLimitEnabled => _monthlyLimitEnabled;
+  bool get monthlyLimitEnabled => _monthlyLimitEnabled;
 
-  static double? get monthlyLimit => _monthlyLimit;
+  double? get monthlyLimit => _monthlyLimit;
 
-  static bool get balanceLimitEnabled => _balanceLimitEnabled;
-  static double? get balanceLimit => _balanceLimit;
+  bool get balanceLimitEnabled => _balanceLimitEnabled;
 
-  static set weeklyLimitEnabled(bool b) {
+  double? get balanceLimit => _balanceLimit;
+
+  set weeklyLimitEnabled(bool b) {
     _weeklyLimitEnabled = b;
     _box.put("weeklyLimitEnabled", b);
+    notifyListeners();
   }
 
-  static set weeklyLimit(double? d) {
+  set weeklyLimit(double? d) {
     _weeklyLimit = d;
     _box.put("weeklyLimit", d);
+    notifyListeners();
   }
 
-  static set monthlyLimitEnabled(bool b) {
+  set monthlyLimitEnabled(bool b) {
     _monthlyLimitEnabled = b;
     _box.put("monthlyLimitEnabled", b);
+    notifyListeners();
   }
 
-  static set monthlyLimit(double? d) {
+  set monthlyLimit(double? d) {
     _monthlyLimit = d;
     _box.put("monthlyLimit", d);
+    notifyListeners();
   }
 
-  static set balanceLimitEnabled(bool b) {
+  set balanceLimitEnabled(bool b) {
     _balanceLimitEnabled = b;
     _box.put("balanceLimitEnabled", b);
+    notifyListeners();
   }
 
-  static set balanceLimit(double? d) {
+  set balanceLimit(double? d) {
     _balanceLimit = d;
     _box.put("balanceLimit", d);
+    notifyListeners();
   }
 
-  static Future<void> loadSettings() async {
+  Future<void> loadSettings() async {
     _box = await Hive.openBox("settings");
 
     // Limits
@@ -67,6 +75,4 @@ class Settings {
     _balanceLimitEnabled = _box.get("balanceLimitEnabled", defaultValue: false);
     _balanceLimit = _box.get("balanceLimit", defaultValue: null);
   }
-
-  Settings._();
 }

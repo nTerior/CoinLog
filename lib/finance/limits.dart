@@ -32,7 +32,7 @@ abstract class TimelyExpenseLimit extends ExpenseLimit {
 
 class WeeklyExpenseLimit extends TimelyExpenseLimit {
   @override
-  double get limit => Settings.monthlyLimit ?? 0;
+  double get limit => _settings.monthlyLimit ?? 0;
 
   @override
   DateTime getFirstIncludedDate() {
@@ -49,7 +49,7 @@ class WeeklyExpenseLimit extends TimelyExpenseLimit {
 
 class MonthlyExpenseLimit extends TimelyExpenseLimit {
   @override
-  double get limit => Settings.monthlyLimit ?? 0;
+  double get limit => _settings.monthlyLimit ?? 0;
 
   @override
   DateTime getFirstIncludedDate() => DateTime.now().copyWith(day: 1);
@@ -64,7 +64,7 @@ class MonthlyExpenseLimit extends TimelyExpenseLimit {
 class MinimumBalanceLimit extends ExpenseLimit {
   @override
   // ToDo
-  double get limit => 2000;
+  double get limit => _settings.balanceLimit ?? 0;
 
   @override
   double calcRemainingLimit(List<Transaction> transactions) =>
@@ -76,10 +76,16 @@ class MinimumBalanceLimit extends ExpenseLimit {
                   .reduce((value, element) => element + value);
 }
 
+late Settings _settings;
+
 class Limits {
   Limits._();
 
   static final monthlyLimit = MonthlyExpenseLimit();
   static final weeklyLimit = WeeklyExpenseLimit();
   static final minimumBalanceLimit = MinimumBalanceLimit();
+
+  static void init(Settings s) {
+    _settings = s;
+  }
 }

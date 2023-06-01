@@ -3,6 +3,7 @@ import 'package:coin_log/layout.dart';
 import 'package:coin_log/widgets/background_image.dart';
 import 'package:coin_log/widgets/balance_info.dart';
 import 'package:coin_log/widgets/grid_buttons.dart';
+import 'package:coin_log/widgets/limits_info.dart';
 import 'package:coin_log/widgets/transaction_history.dart';
 import 'package:flutter/material.dart';
 
@@ -31,11 +32,11 @@ class HomePage extends StatelessWidget {
                   children: const [
                     SizedBox(height: Layout.padding),
                     BalanceInfo(),
+                    LimitsInfo(),
                     SizedBox(height: Layout.padding),
                     GridButtons(),
-                    SizedBox(height: Layout.padding * 2),
-                    TransactionHistory(),
                     SizedBox(height: Layout.padding),
+                    TransactionHistory(),
                   ],
                 ),
               ),
