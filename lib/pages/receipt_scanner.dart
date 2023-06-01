@@ -249,18 +249,10 @@ class _ReceiptDetails extends StatelessWidget {
         ),
       ),
       const SizedBox(height: Layout.padding),
+      // ToDo: add edit button
       Row(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(
-            width: 100,
-            child: GridButton(
-              text: "Edit",
-              icon: Symbols.edit,
-              onTap: () {},
-            ),
-          ),
-          const SizedBox(width: Layout.padding),
+          const Spacer(),
           SizedBox(
             width: 100,
             child: GridButton(
