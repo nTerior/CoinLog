@@ -36,13 +36,13 @@ class WeeklyExpenseLimit extends TimelyExpenseLimit {
 
   @override
   DateTime getFirstIncludedDate() {
-    final now = DateTime.now();
+    final now = DateTime.now().copyWith(hour: 0, minute: 0, second: 0);
     return now.subtract(Duration(days: now.weekday - 1));
   }
 
   @override
   DateTime getLastIncludedDate() {
-    final now = DateTime.now();
+    final now = DateTime.now().copyWith(hour: 23, minute: 59, second: 59);
     return now.add(Duration(days: 7 - now.weekday));
   }
 }
@@ -52,12 +52,23 @@ class MonthlyExpenseLimit extends TimelyExpenseLimit {
   double get limit => _settings.monthlyLimit ?? 0;
 
   @override
-  DateTime getFirstIncludedDate() => DateTime.now().copyWith(day: 1);
+  DateTime getFirstIncludedDate() => DateTime.now().copyWith(
+        day: 1,
+        hour: 0,
+        minute: 0,
+        second: 0,
+      );
 
   @override
   DateTime getLastIncludedDate() {
     final now = DateTime.now();
-    return now.copyWith(day: 0, month: now.month + 1);
+    return now.copyWith(
+      day: 0,
+      month: now.month + 1,
+      hour: 23,
+      minute: 59,
+      second: 59,
+    );
   }
 }
 
