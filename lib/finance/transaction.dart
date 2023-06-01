@@ -16,6 +16,8 @@ extension DateUtils on DateTime {
   String get formatDate => DateFormat.yMMMd(Intl.systemLocale).format(this);
 
   String get formatTime => DateFormat.Hm(Intl.systemLocale).format(this);
+
+  String get formatDateTime => "$formatDate • $formatTime";
 }
 
 @HiveType(typeId: 0)
@@ -36,7 +38,8 @@ class TransactionWidget extends StatelessWidget {
   final Transaction transaction;
 
   const TransactionWidget({
-    super.key, required this.transaction,
+    super.key,
+    required this.transaction,
   });
 
   @override

@@ -45,15 +45,22 @@ class Finance extends ChangeNotifier {
   }
 
   void editTransaction(Transaction t) {
-    notifyListeners();
-
     t.save();
+    _recalcBalance();
+    notifyListeners();
   }
 
   Future<void> initFinances() async {
     final box = await Hive.openBox<Transaction>(_transactionsBox);
     for(final t in box.values) {
       _transactions.add(t);
+      _balance += t.amount;
+    }
+  }
+
+  void _recalcBalance() {
+    _balance = 0;
+    for(final t in _transactions) {
       _balance += t.amount;
     }
   }
