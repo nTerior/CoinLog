@@ -204,15 +204,30 @@ class _TransactionEditorSheetState extends State<TransactionEditorSheet> {
                 final decision = await openModal<bool>(
                   context,
                   ChoiceSelectorModal(
-                    text:
-                        "You are exceeding your ${exceeded.limit} by ${(-exceeded.remaining).asCurrency("€")}!",
-                    choices: const [
+                    text: TextSpan(
+                      text: "You are exceeding your ",
+                      style: const TextStyle(fontWeight: FontWeight.w100),
+                      children: [
+                        TextSpan(
+                          text: exceeded.limit,
+                          style: const TextStyle(fontWeight: FontWeight.normal),
+                        ),
+                        const TextSpan(text: " by "),
+                        TextSpan(
+                          text: (-exceeded.remaining).asCurrency("€"),
+                          style: const TextStyle(fontWeight: FontWeight.normal),
+                        ),
+                        const TextSpan(text: "!"),
+                      ],
+                    ),
+                    choices: [
                       SelectorChoice(
                         name: "Ignore Limit",
                         icon: Symbols.warning,
+                        color: Colors.yellow[700],
                         value: true,
                       ),
-                      SelectorChoice(
+                      const SelectorChoice(
                         name: "Cancel",
                         icon: Symbols.cancel,
                         value: false,

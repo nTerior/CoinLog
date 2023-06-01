@@ -67,8 +67,10 @@ class GridButtons extends StatelessWidget {
         openModal(
           context,
           const ChoiceSelectorModal(
-            text:
-                "An internet connection is required in order to use the receipt scanner!",
+            text: TextSpan(
+              text:
+                  "An internet connection is required in order to use the receipt scanner!",
+            ),
             choices: [
               SelectorChoice(name: "Close", icon: Symbols.close, value: null),
             ],
@@ -82,7 +84,12 @@ class GridButtons extends StatelessWidget {
       final result = await openModal<ImageSource>(
         context,
         const ChoiceSelectorModal(
-          text: "Scan receipt from:",
+          text: TextSpan(
+            text: "Scan receipt from:",
+            style: TextStyle(
+              fontWeight: FontWeight.w100,
+            ),
+          ),
           choices: [
             SelectorChoice(
               name: "Camera",
