@@ -8,6 +8,7 @@ import 'package:coin_log/morphism/glass_morphism.dart';
 import 'package:coin_log/receipt/receipt.dart';
 import 'package:coin_log/widgets/grid_buttons.dart';
 import 'package:coin_log/widgets/receipt_item.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -45,8 +46,8 @@ Future<MultipartRequest> buildRequest(String uri, String imagePath) async {
 }
 
 Future<Response> _getResponse(MultipartRequest request) async {
-  //return Response.fromStream(await request.send());
-  return Response(r'''{
+  if (kDebugMode) {
+    return Response(r'''{
   "request_id" : "P_218.186.139.27_kl96a7ie_o9k",
   "ref_no" : "AspDemo_1613550458205_154",
   "file_name" : "SG-01s.jpg",
@@ -114,6 +115,8 @@ Future<Response> _getResponse(MultipartRequest request) async {
     }
   } ]
 }''', 200);
+  }
+  return Response.fromStream(await request.send());
 }
 
 class ReceiptScannerPage extends StatefulWidget {
