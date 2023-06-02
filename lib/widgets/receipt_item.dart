@@ -1,4 +1,5 @@
 import 'package:coin_log/finance/finance.dart';
+import 'package:coin_log/layout.dart';
 import 'package:coin_log/receipt/receipt_item.dart';
 import 'package:flutter/material.dart';
 
@@ -12,8 +13,17 @@ class ReceiptItemWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(item.description ?? "Item"),
-        Text(item.amount!.asCurrency("€")),
+        Expanded(
+          child: Text(
+            item.description ?? "Item",
+            softWrap: true,
+          ),
+        ),
+        const SizedBox(width: Layout.padding),
+        Text(
+          item.amount!.asCurrency("€"),
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
       ],
     );
   }
