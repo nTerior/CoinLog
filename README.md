@@ -1,3 +1,3 @@
 # Coin Log
 
-An expense tracker with receipt scanner
+Coin Log is an expense tracker featuring a receipt scanner.
