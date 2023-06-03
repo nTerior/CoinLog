@@ -43,7 +43,8 @@ class TransactionDeletorModal extends StatelessWidget {
                 iconColor: Theme.of(context).colorScheme.error,
                 onTap: () {
                   Navigator.pop(context);
-                  Provider.of<Finance>(context, listen: false).remove(transaction);
+                  Provider.of<Finance>(context, listen: false)
+                      .remove(transaction);
                 },
               ),
             ),

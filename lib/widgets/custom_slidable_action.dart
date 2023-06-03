@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class MySlidableAction extends StatelessWidget {
-
   /// Code taken primarily from [SlidableAction]
   const MySlidableAction({
     Key? key,
